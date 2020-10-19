@@ -1,1 +1,1 @@
-worker: cd pyladiesbrasilbot & python core.py
+worker: python pyladiesbrasilbot/core.py
