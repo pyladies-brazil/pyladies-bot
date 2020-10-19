@@ -4,7 +4,9 @@
 
 > Esse projeto ainda está em construção!
 
-Repositório com o código fonte do PyLadies Brasil Bot (t.me/PyLadiesBrasilBot), desenvolvido com [python-telegram-bot](https://github.com/python-telegram-bot/python-telegram-bot).
+Repositório com o código fonte do PyLadies Brasil Bot ([t.me/PyLadiesBrasilBot](t.me/PyLadiesBrasilBot)), desenvolvido com [python-telegram-bot](https://github.com/python-telegram-bot/python-telegram-bot).
+
+Para ver os próximos passos desse projeto, veja as [issues](https://github.com/naanadr/ladies-bot/issues). Estamos aceitando contribuição :heart:
 
 ## Dependências
 
