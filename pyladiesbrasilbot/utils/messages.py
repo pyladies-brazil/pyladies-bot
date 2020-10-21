@@ -9,7 +9,7 @@ START_MESSAGE = (
 )
 
 WELCOME_NEW_MEMBER_MESSAGE = (
-    "Seja bem vinda, {first_name} {las_name} (@{username}) ao {chat_title}!"
+    "Seja bem vinda, {first_name} {last_name} (@{username}) ao {chat_title}!"
 )
 
 HELP_MESSAGE = (
@@ -29,3 +29,10 @@ HELLO_MESSAGE = (
 )
 
 UNKNOWN_MESSAGE = "Comando inválido! Insira /help para ver a lista de comandos"
+
+CONF_BOAS_VINDAS_PHOTO_INFO = (
+    "Comando utilizado de forma incorreta!\n"
+    "Por favor, envie uma foto com a legenda /conf_boas_vindas_foto."
+)
+
+CONF_BOAS_VINDAS_PHOTO_INFO_CHECK = "Foto enviada com sucesso!"
