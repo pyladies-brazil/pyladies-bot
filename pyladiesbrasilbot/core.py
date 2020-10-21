@@ -1,13 +1,11 @@
 from telegram.ext import CommandHandler, Filters, MessageHandler, Updater
 
 from conf.settings import TELEGRAM_TOKEN
+from utils.messages import START_MESSAGE, WELCOME_NEW_MEMBER_MESSAGE
 
 
 def start(update, context):
-    response_message = (
-        "Olá, eu sou a PyLadies Brasil Bot! "
-        "Ainda estou em construção, mas espero poder te ajudar."
-    )
+    response_message = START_MESSAGE
     context.bot.send_message(chat_id=update.effective_chat.id, text=response_message)
 
 
@@ -19,10 +17,19 @@ def help(update, context):
 def welcome(update, context):
     for new_member in update.message.new_chat_members:
         if not new_member.is_bot:
-            message = (
-                f"Seja bem vinda, {new_member.first_name} "
-                f"{new_member.last_name} "
-                f"(@{new_member.username}) ao {update.message.chat.title}!"
+            first_name = new_member.first_name
+            last_name = new_member.last_name
+            username = new_member.username
+            chat_title = update.message.chat.title
+
+            if last_name is None:
+                last_name = ""
+
+            message = WELCOME_NEW_MEMBER_MESSAGE.format(
+                first_name=first_name,
+                last_name=last_name,
+                username=username,
+                chat_title=chat_title,
             )
             context.bot.sendPhoto(
                 chat_id=update.effective_chat.id,
