@@ -1,6 +1,9 @@
 START_MESSAGE = (
-    "Olá, eu sou a PyLadies Brasil Bot! "
-    "Ainda estou em construção, mas espero poder te ajudar."
+    "Olá, eu sou a PyLadies Brasil Bot! \n"
+    "Sou um Bot focado em moderação de grupo, principalmente os"
+    " grupos dos PyLadies no Telegram :).\n"
+    "Ainda estou em construção, mas espero poder te ajudar.\n\n"
+    "Para ver a lista de comandos execute /help"
 )
 
 WELCOME_NEW_MEMBER_MESSAGE = (
