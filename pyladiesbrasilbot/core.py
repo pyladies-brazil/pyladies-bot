@@ -1,7 +1,12 @@
 from telegram.ext import CommandHandler, Filters, MessageHandler, Updater
 
 from conf.settings import TELEGRAM_TOKEN
-from utils.messages import START_MESSAGE, WELCOME_NEW_MEMBER_MESSAGE
+from utils.messages import (
+    HELLO_MESSAGE,
+    HELP_MESSAGE,
+    START_MESSAGE,
+    WELCOME_NEW_MEMBER_MESSAGE,
+)
 
 
 def start(update, context):
@@ -10,17 +15,18 @@ def start(update, context):
 
 
 def help(update, context):
-    message = "Lista de comandos ainda em construção..."
+    message = HELP_MESSAGE
     context.bot.send_message(chat_id=update.effective_chat.id, text=message)
 
 
 def welcome(update, context):
     for new_member in update.message.new_chat_members:
+        chat_title = update.message.chat.title
+
         if not new_member.is_bot:
             first_name = new_member.first_name
             last_name = new_member.last_name
             username = new_member.username
-            chat_title = update.message.chat.title
 
             if last_name is None:
                 last_name = ""
@@ -35,6 +41,11 @@ def welcome(update, context):
                 chat_id=update.effective_chat.id,
                 photo=open("pyladiesbrasilbot/utils/welcome_pyladies_recife.jpg", "rb"),
                 caption=message,
+            )
+        elif new_member.full_name == "PyLadies Brasil Bot":
+            context.bot.send_message(
+                chat_id=update.effective_chat.id,
+                text=HELLO_MESSAGE.format(chat_title=chat_title),
             )
 
 
