@@ -3,6 +3,8 @@ START_MESSAGE = (
     "Sou um Bot focado em moderação de grupo, principalmente os"
     " grupos dos PyLadies no Telegram :).\n"
     "Ainda estou em construção, mas espero poder te ajudar.\n\n"
+    "Você pode me adicionar ao seu grupo e me configurar lá mesmo, "
+    "não precisa me colocar como administradora.\n\n"
     "Para ver a lista de comandos execute /help"
 )
 
@@ -13,6 +15,7 @@ WELCOME_NEW_MEMBER_MESSAGE = (
 HELP_MESSAGE = (
     "/conf_boas_vindas -> "
     "Configurar mensagem de boas vindas para o grupo (apenas mensagem)\n"
+    "/imagem_boas_vindas_padrao -> Para ver a imagem de boas vindas padrão\n"
     "/conf_boas_vindas_foto -> "
     "Configurar mensagem de boas vindas para o grupo (foto com mensagem)\n"
     "/help -> Lista de comandos"
