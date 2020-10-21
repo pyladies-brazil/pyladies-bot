@@ -24,3 +24,5 @@ HELLO_MESSAGE = (
     "Para que eu possa começar o meu trabalho, por favor, "
     "configure algumas funcionalidades minhas: \n" + HELP_MESSAGE
 )
+
+UNKNOWN_MESSAGE = "Comando inválido! Insira /help para ver a lista de comandos"

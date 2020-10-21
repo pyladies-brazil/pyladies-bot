@@ -5,6 +5,7 @@ from utils.messages import (
     HELLO_MESSAGE,
     HELP_MESSAGE,
     START_MESSAGE,
+    UNKNOWN_MESSAGE,
     WELCOME_NEW_MEMBER_MESSAGE,
 )
 
@@ -50,7 +51,7 @@ def welcome(update, context):
 
 
 def unknown(update, context):
-    response_message = "Comando inválido! Insira /help para ver a lista de comandos"
+    response_message = UNKNOWN_MESSAGE
     context.bot.send_message(chat_id=update.effective_chat.id, text=response_message)
 
 
