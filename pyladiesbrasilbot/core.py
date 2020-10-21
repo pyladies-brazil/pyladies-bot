@@ -1,6 +1,8 @@
 from telegram.ext import CommandHandler, Filters, MessageHandler, Updater
 
 from conf.settings import TELEGRAM_TOKEN
+
+from utils.constants import DEFAULT_PHOTO_WELCOME
 from utils.messages import (
     HELLO_MESSAGE,
     HELP_MESSAGE,
@@ -10,9 +12,48 @@ from utils.messages import (
 )
 
 
+def main():
+    updater = Updater(token=TELEGRAM_TOKEN, use_context=True)
+
+    dispatcher = updater.dispatcher
+
+    dispatcher.add_handler(CommandHandler("start", start))
+    dispatcher.add_handler(
+        CommandHandler("imagem_boas_vindas_padrao", imagem_boas_vindas_padrao)
+    )
+    dispatcher.add_handler(
+        CommandHandler("conf_boas_vindas_foto", conf_boas_vindas_foto)
+    )
+    dispatcher.add_handler(CommandHandler("conf_boas_vindas", conf_boas_vindas))
+    dispatcher.add_handler(CommandHandler("help", help))
+    dispatcher.add_handler(
+        MessageHandler(Filters.status_update.new_chat_members, welcome)
+    )
+    dispatcher.add_handler(MessageHandler(Filters.command, unknown))
+
+    updater.start_polling()
+
+    updater.idle()
+
+
 def start(update, context):
     response_message = START_MESSAGE
     context.bot.send_message(chat_id=update.effective_chat.id, text=response_message)
+
+
+def imagem_boas_vindas_padrao(update, context):
+    context.bot.sendPhoto(
+        chat_id=update.effective_chat.id,
+        photo=open(DEFAULT_PHOTO_WELCOME, "rb"),
+    )
+
+
+def conf_boas_vindas_foto(update, context):
+    pass
+
+
+def conf_boas_vindas(update, context):
+    pass
 
 
 def help(update, context):
@@ -40,7 +81,7 @@ def welcome(update, context):
             )
             context.bot.sendPhoto(
                 chat_id=update.effective_chat.id,
-                photo=open("pyladiesbrasilbot/utils/welcome_pyladies_recife.jpg", "rb"),
+                photo=open(DEFAULT_PHOTO_WELCOME, "rb"),
                 caption=message,
             )
         elif new_member.full_name == "PyLadies Brasil Bot":
@@ -53,23 +94,6 @@ def welcome(update, context):
 def unknown(update, context):
     response_message = UNKNOWN_MESSAGE
     context.bot.send_message(chat_id=update.effective_chat.id, text=response_message)
-
-
-def main():
-    updater = Updater(token=TELEGRAM_TOKEN, use_context=True)
-
-    dispatcher = updater.dispatcher
-
-    dispatcher.add_handler(CommandHandler("start", start))
-    dispatcher.add_handler(CommandHandler("help", help))
-    dispatcher.add_handler(
-        MessageHandler(Filters.status_update.new_chat_members, welcome)
-    )
-    dispatcher.add_handler(MessageHandler(Filters.command, unknown))
-
-    updater.start_polling()
-
-    updater.idle()
 
 
 if __name__ == "__main__":
