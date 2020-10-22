@@ -13,11 +13,20 @@ WELCOME_NEW_MEMBER_MESSAGE = (
 )
 
 HELP_MESSAGE = (
-    "/conf_boas_vindas -> "
-    "Configurar mensagem de boas vindas para o grupo (apenas mensagem)\n"
-    "/imagem_boas_vindas_padrao -> Para ver a imagem de boas vindas padrão\n"
-    "/conf_boas_vindas_foto -> "
-    "Configurar mensagem de boas vindas para o grupo (foto com mensagem)\n"
+    "/boas_vindas -> "
+    "Configurar mensagem de boas vindas para o grupo. "
+    "Essa mensagem será mostrada a novos membros do grupo.\n"
+    "/boas_vindas_foto -> "
+    "Configurar nova imagem de boas vindas do grupo.\n"
+    "/imagem_boas_vindas -> Para ver a imagem que será mostrada na mensagem "
+    "de boas vindas.\n"
+    "/desativar_imagem_boas_vindas -> "
+    "Desativar envio de imagem na mensagem de boas vindas. "
+    "Caso esteja desativada, o resultado será o de ativação.\n"
+    "/desativar_boas_vindas -> "
+    "Desativar envio de mensagem de boas vindas.\n"
+    "/status_boas_vindas -> "
+    "Para ver o status da mensagem de boas vindas.\n"
     "/help -> Lista de comandos"
 )
 
