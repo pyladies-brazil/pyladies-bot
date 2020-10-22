@@ -1,9 +1,9 @@
 import pickle
-from io import BytesIO
 
 from telegram.ext import CommandHandler, Filters, MessageHandler, Updater
 
 from conf.settings import TELEGRAM_TOKEN
+from utils import load_file
 from utils.constants import DEFAULT_PHOTO_WELCOME, DEFAULT_PICKEL_FILE
 from utils.messages import (
     CONF_BOAS_VINDAS_PHOTO_INFO_CHECK,
@@ -22,27 +22,23 @@ def main():
     dispatcher = updater.dispatcher
 
     dispatcher.add_handler(CommandHandler("start", start))
-    dispatcher.add_handler(
-        CommandHandler("imagem_boas_vindas_padrao", imagem_boas_vindas_padrao)
-    )
-    dispatcher.add_handler(
-        CommandHandler("conf_boas_vindas_foto", conf_boas_vindas_foto_info)
-    )
+    dispatcher.add_handler(CommandHandler("imagem_boas_vindas", imagem_boas_vindas))
+    dispatcher.add_handler(CommandHandler("boas_vindas_foto", boas_vindas_foto_info))
     dispatcher.add_handler(
         MessageHandler(
             filters=Filters.photo
             & (
                 Filters.caption(
                     [
-                        "/conf_boas_vindas_foto",
-                        "/conf_boas_vindas_foto@PyLadiesBrasilBot",
+                        "/boas_vindas_foto",
+                        "/boas_vindas_foto@PyLadiesBrasilBot",
                     ]
                 )
             ),
-            callback=conf_boas_vindas_foto,
+            callback=boas_vindas_foto,
         )
     )
-    dispatcher.add_handler(CommandHandler("conf_boas_vindas", conf_boas_vindas))
+    dispatcher.add_handler(CommandHandler("boas_vindas", boas_vindas))
     dispatcher.add_handler(CommandHandler("help", help))
     dispatcher.add_handler(
         MessageHandler(Filters.status_update.new_chat_members, welcome)
@@ -50,7 +46,6 @@ def main():
     dispatcher.add_handler(MessageHandler(Filters.command, unknown))
 
     updater.start_polling()
-
     updater.idle()
 
 
@@ -59,22 +54,32 @@ def start(update, context):
     context.bot.send_message(chat_id=update.effective_chat.id, text=response_message)
 
 
-def imagem_boas_vindas_padrao(update, context):
-    # TODO: Se tiver uma foto configurada, mostar essa foto
+def help(update, context):
+    context.bot.send_message(chat_id=update.effective_chat.id, text=HELP_MESSAGE)
+
+
+def imagem_boas_vindas(update, context):
+    chat_id = update.effective_chat.id
+
     context.bot.sendPhoto(
-        chat_id=update.effective_chat.id,
-        photo=open(DEFAULT_PHOTO_WELCOME, "rb"),
+        chat_id=chat_id,
+        photo=load_file(
+            context=context,
+            pickle_file=DEFAULT_PICKEL_FILE,
+            default_photo=DEFAULT_PHOTO_WELCOME,
+            chat_id=chat_id,
+        ),
     )
 
 
-def conf_boas_vindas_foto_info(update, context):
+def boas_vindas_foto_info(update, context):
     context.bot.send_message(
         chat_id=update.effective_chat.id,
         text=CONF_BOAS_VINDAS_PHOTO_INFO,
     )
 
 
-def conf_boas_vindas_foto(update, context):
+def boas_vindas_foto(update, context):
     photos = update.message.photo
     if photos:
         photo_id = photos[-1].file_id
@@ -91,32 +96,11 @@ def conf_boas_vindas_foto(update, context):
         )
 
 
-def conf_boas_vindas(update, context):
+def boas_vindas(update, context):
     pass
 
 
-def help(update, context):
-    message = HELP_MESSAGE
-    context.bot.send_message(chat_id=update.effective_chat.id, text=message)
-
-
 def welcome(update, context):
-    def load_file():
-        try:
-            with open(DEFAULT_PICKEL_FILE, "rb") as files:
-                dict_files = pickle.load(files)
-                photo_id = dict_files.get(chat_id)
-
-                if photo_id is None:
-                    photo = open(DEFAULT_PHOTO_WELCOME, "rb")
-                else:
-                    file = context.bot.get_file(photo_id)
-                    photo = BytesIO(file.download_as_bytearray())
-        except FileNotFoundError:
-            photo = open(DEFAULT_PHOTO_WELCOME, "rb")
-
-        return photo
-
     chat_id = update.effective_chat.id
 
     for new_member in update.message.new_chat_members:
@@ -139,7 +123,12 @@ def welcome(update, context):
 
             context.bot.sendPhoto(
                 chat_id=chat_id,
-                photo=load_file(),
+                photo=load_file(
+                    context=context,
+                    pickle_file=DEFAULT_PICKEL_FILE,
+                    default_photo=DEFAULT_PHOTO_WELCOME,
+                    chat_id=chat_id,
+                ),
                 caption=message,
             )
         elif new_member.full_name == "PyLadies Brasil Bot":
@@ -150,8 +139,10 @@ def welcome(update, context):
 
 
 def unknown(update, context):
-    response_message = UNKNOWN_MESSAGE
-    context.bot.send_message(chat_id=update.effective_chat.id, text=response_message)
+    context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text=UNKNOWN_MESSAGE,
+    )
 
 
 if __name__ == "__main__":
