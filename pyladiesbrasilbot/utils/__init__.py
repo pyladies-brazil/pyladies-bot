@@ -28,7 +28,7 @@ def load_file(context, pickle_file, default_photo, chat_id):
 
 def save_pickle(pickle_file, dict):
     old_dict = load_pickle(pickle_file)
-    dict.update(old_dict)
+    old_dict.update(dict)
 
     with open(pickle_file, "wb") as files:
-        pickle.dump(dict, files, protocol=pickle.HIGHEST_PROTOCOL)
+        pickle.dump(old_dict, files, protocol=pickle.HIGHEST_PROTOCOL)
