@@ -1,10 +1,11 @@
-import pickle
-
 from telegram.ext import CommandHandler, Filters, MessageHandler, Updater
 
 from conf.settings import TELEGRAM_TOKEN
-from utils import load_file
-from utils.constants import DEFAULT_PHOTO_WELCOME, DEFAULT_PICKEL_FILE
+from utils import load_file, save_pickle
+from utils.constants import (
+    DEFAULT_PHOTO_WELCOME,
+    DEFAULT_PICKEL_FILE_PHOTO,
+)
 from utils.messages import (
     CONF_BOAS_VINDAS_PHOTO_INFO_CHECK,
     CONF_BOAS_VINDAS_PHOTO_INFO,
@@ -22,24 +23,27 @@ def main():
     dispatcher = updater.dispatcher
 
     dispatcher.add_handler(CommandHandler("start", start))
-    dispatcher.add_handler(CommandHandler("imagem_boas_vindas", imagem_boas_vindas))
-    dispatcher.add_handler(CommandHandler("boas_vindas_foto", boas_vindas_foto_info))
+    dispatcher.add_handler(CommandHandler("boas_vindas_imagem", boas_vindas_imagem))
+    dispatcher.add_handler(
+        CommandHandler("boas_vindas_nova_imagem", boas_vindas_nova_imagem_info)
+    )
     dispatcher.add_handler(
         MessageHandler(
             filters=Filters.photo
             & (
                 Filters.caption(
                     [
-                        "/boas_vindas_foto",
-                        "/boas_vindas_foto@PyLadiesBrasilBot",
+                        "/boas_vindas_nova_imagem",
+                        "/boas_vindas_nova_imagem@PyLadiesBrasilBot",
                     ]
                 )
             ),
-            callback=boas_vindas_foto,
+            callback=boas_vindas_nova_imagem,
         )
     )
     dispatcher.add_handler(CommandHandler("boas_vindas", boas_vindas))
     dispatcher.add_handler(CommandHandler("help", help))
+
     dispatcher.add_handler(
         MessageHandler(Filters.status_update.new_chat_members, welcome)
     )
@@ -58,46 +62,54 @@ def help(update, context):
     context.bot.send_message(chat_id=update.effective_chat.id, text=HELP_MESSAGE)
 
 
-def imagem_boas_vindas(update, context):
+def boas_vindas_imagem(update, context):
     chat_id = update.effective_chat.id
 
     context.bot.sendPhoto(
         chat_id=chat_id,
         photo=load_file(
             context=context,
-            pickle_file=DEFAULT_PICKEL_FILE,
+            pickle_file=DEFAULT_PICKEL_FILE_PHOTO,
             default_photo=DEFAULT_PHOTO_WELCOME,
             chat_id=chat_id,
         ),
     )
 
 
-def boas_vindas_foto_info(update, context):
+def boas_vindas_nova_imagem_info(update, context):
     context.bot.send_message(
         chat_id=update.effective_chat.id,
         text=CONF_BOAS_VINDAS_PHOTO_INFO,
     )
 
 
-def boas_vindas_foto(update, context):
+def boas_vindas_nova_imagem(update, context):
+    chat_id = update.effective_chat.id
     photos = update.message.photo
     if photos:
         photo_id = photos[-1].file_id
         chat_id = update.effective_chat.id
 
-        dict_photo = {chat_id: photo_id}
-
-        with open(DEFAULT_PICKEL_FILE, "ab") as files:
-            pickle.dump(dict_photo, files, protocol=pickle.HIGHEST_PROTOCOL)
+        save_pickle(
+            pickle_file=DEFAULT_PICKEL_FILE_PHOTO,
+            dict={chat_id: photo_id},
+        )
 
         context.bot.send_message(
-            chat_id=update.effective_chat.id,
+            chat_id=chat_id,
             text=CONF_BOAS_VINDAS_PHOTO_INFO_CHECK,
+        )
+    else:
+        context.bot.send_message(
+            chat_id=chat_id,
+            text=CONF_BOAS_VINDAS_PHOTO_INFO,
         )
 
 
 def boas_vindas(update, context):
-    pass
+    context.bot.send_message(
+        chat_id=update.effective_chat.id, text=WELCOME_NEW_MEMBER_MESSAGE
+    )
 
 
 def welcome(update, context):
@@ -125,7 +137,7 @@ def welcome(update, context):
                 chat_id=chat_id,
                 photo=load_file(
                     context=context,
-                    pickle_file=DEFAULT_PICKEL_FILE,
+                    pickle_file=DEFAULT_PICKEL_FILE_PHOTO,
                     default_photo=DEFAULT_PHOTO_WELCOME,
                     chat_id=chat_id,
                 ),
@@ -133,8 +145,7 @@ def welcome(update, context):
             )
         elif new_member.full_name == "PyLadies Brasil Bot":
             context.bot.send_message(
-                chat_id=chat_id,
-                text=HELLO_MESSAGE.format(chat_title=chat_title),
+                chat_id=chat_id, text=HELLO_MESSAGE.format(chat_title=chat_title)
             )
 
 
