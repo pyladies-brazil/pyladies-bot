@@ -37,7 +37,7 @@ UNKNOWN_MESSAGE = "Comando inválido! Insira /help para ver a lista de comandos"
 
 CONF_BOAS_VINDAS_PHOTO_INFO = (
     "Comando utilizado de forma incorreta!\n"
-    "Por favor, envie uma foto com a legenda /conf_boas_vindas_foto."
+    "Por favor, envie uma foto com a legenda /boas_vindas_nova_imagem."
 )
 
 CONF_BOAS_VINDAS_PHOTO_INFO_CHECK = "Foto enviada com sucesso!"
